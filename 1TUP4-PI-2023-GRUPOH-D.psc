@@ -1,0 +1,3 @@
+Algoritmo sistema_gestion
+	
+FinAlgoritmo
