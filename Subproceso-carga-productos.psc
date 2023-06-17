@@ -2,11 +2,11 @@ Algoritmo sistema_gestion
 	Definir usuarios Como Caracter
 	Dimension usuarios(100, 2) // array de usuarios registrados, maxima cantidad de usuarios: 100
 	Definir cantidadUsuarios como Entero
-	Definir opcionSeleccionada,opcionMenu Como Entero
+	Definir opcionSeleccionada, opcionMenu Como Entero
 	Definir productosCargados como Cadena
 	Definir idProducto Como Entero
-	//DEFINO ARRAY PARA ALMACENAR LOS DATOS CARGADOS POR USUARIO LUEGO DEL LOGIN. FILAS: 5 PRODUCTOS(EJEMPLO), COLUMNAS 1.ID 2.NOMBRE PRODUCTO 3.STOCK 4.PRECIO
-	Dimension productosCargados[5,4]
+	//DEFINO ARRAY PARA ALMACENAR LOS DATOS CARGADOS POR USUARIO LUEGO DEL LOGIN. FILAS: 100 (PRODUCTOS), COLUMNAS: 4 (1.ID 2.NOMBRE PRODUCTO 3.STOCK 4.PRECIO)
+	Dimension productosCargados[100,4]
 	idProducto<-0	
 	
 	// usuario de prueba
@@ -23,13 +23,15 @@ Algoritmo sistema_gestion
 			1:
 				Si logIn(usuarios, cantidadUsuarios) Entonces
 					Escribir "Hola!"
-					opcionMenu <- menuOpciones()
-					Segun opcionMenu Hacer
-						1:
-							cargaProductos(productosCargados,idProducto)
-						2:
-							//ver inventario y demás opciones de ordenamiento y búsquedas
-					Fin Segun
+					Repetir
+						opcionMenu <- menuOpciones()
+						Segun opcionMenu Hacer
+							1:
+								cargaProductos(productosCargados,idProducto)
+							2:
+								//ver inventario y demás opciones de ordenamiento y búsquedas
+						Fin Segun
+					Hasta Que opcionSeleccionada=3
 				FinSi
 			2:
 				Si register(usuarios, cantidadUsuarios) Entonces
@@ -133,8 +135,8 @@ Funcion return <- logIn(usuarios Por Referencia, cantidadUsuarios Por Referencia
 FinFuncion
 
 // CARGA Y ALMACENAMIENTO EN ARRAY
-Subproceso cargaProductos(productosCargados,idProducto Por Referencia)
-	Definir nombreProducto, otroProducto como cadena
+Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Referencia)
+	Definir nombreProducto, otroProducto, otroProductoMayuscula como cadena
 	Definir stockProducto Como Entero
 	Definir precioProducto como Real
 	Definir confirmaProducto como Logico 
@@ -162,25 +164,34 @@ Subproceso cargaProductos(productosCargados,idProducto Por Referencia)
 		
 		idProducto<- idProducto+1
 		
-		Escribir "Desea agrear otro producto? si/no"
-		Leer otroProducto
-		Si otroProducto="no" Entonces
-			confirmaProducto<-Falso
-		FinSi
+		Repetir
+			Escribir "Desea agregar otro producto? SI/NO"
+			Leer otroProducto
+			otroProductoMayuscula<-Mayusculas(otroProducto)
+			Si otroProductoMayuscula="NO" Entonces
+				confirmaProducto<-Falso
+			Sino 
+				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
+					Escribir "Opción no válida, vuelva a intentarlo"
+				FinSi
+			FinSi
+		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
 	Hasta Que confirmaProducto=Falso
-	
 FinSubProceso
 
-//FUNCION PARA OPCIONES DE CARGA Y VER INVENTARIO
+
+//FUNCION PARA MENU CON OPCIONES DE CARGA Y VER INVENTARIO
 Funcion return<-menuOpciones()
 	Definir return Como Entero
-	Repetir
-		Escribir "Ingrese una opción:"
-		Escribir "1- Agregar productos"
-		Escribir "2- Ver inventario"
+	
+	Escribir "Ingrese una opción:"
+	Escribir "1- Agregar productos"
+	Escribir "2- Ver inventario"
+	Escribir "3- Salir"
+	Repetir	
 		Leer return
-		Si return <>1 y return<>2 Entonces
+		Si return <>1 y return<>2 y return<>3 Entonces
 			Escribir "Ingrese una opción correcta"
 		FinSi
-	Hasta Que return=1 o return=2
+	Hasta Que return=1 o return=2 o return=3
 FinFuncion
