@@ -3,6 +3,11 @@ Algoritmo sistema_gestion
 	Dimension usuarios(100, 2) // array de usuarios registrados, maxima cantidad de usuarios: 100
 	Definir cantidadUsuarios como Entero
 	Definir opcionSeleccionada Como Entero
+	Definir productosCargados como Cadena
+	Definir idProducto Como Entero
+	//DEFINO ARRAY PARA ALMACENAR LOS DATOS CARGADOS POR USUARIO LUEGO DEL LOGIN. FILAS: 100 (PRODUCTOS), COLUMNAS: 4 (1.ID 2.NOMBRE PRODUCTO 3.STOCK 4.PRECIO)
+	Dimension productosCargados[100,4]
+	idProducto<-0	
 	
 	// usuario de prueba
 	usuarios(0, 0) <- "usertest"
@@ -10,7 +15,7 @@ Algoritmo sistema_gestion
 	cantidadUsuarios <- 1 // esta variable se usa en la funcion logIn y register como index de las filas en el array de usuarios, se le suma 1 por cada nuevo usuario
 	
 	Escribir "Bienvenido al sistema de gestion"
-
+	
 	Repetir
 		opcionSeleccionada <- welcomeMenu()
 		
@@ -18,7 +23,15 @@ Algoritmo sistema_gestion
 			1:
 				Si logIn(usuarios, cantidadUsuarios) Entonces
 					Escribir "Hola!"
-					// aca van el resto de las opciones del menu luego de loguearse
+					Repetir
+						opcionSeleccionada <- menuOpciones()
+						Segun opcionSeleccionada Hacer
+							1:
+								cargaProductos(productosCargados,idProducto)
+							2:
+								//ver inventario y demás opciones de ordenamiento y búsquedas
+						Fin Segun
+					Hasta Que opcionSeleccionada=3
 				FinSi
 			2:
 				Si register(usuarios, cantidadUsuarios) Entonces
@@ -70,7 +83,7 @@ Funcion return <- register(usuarios Por Referencia, cantidadUsuarios Por Referen
 		// si los datos ingresados cumplen las condiciones, se agrega el usuario a la lista de usuarios usando de index la variable cantidadUsuarios
 		usuarios(cantidadUsuarios, 0) <- user
 		usuarios(cantidadUsuarios, 1) <- pass
-		cantidadUsuarios = cantidadUsuarios + 1 // se le suma 1 a la cantidad de usuarios
+		cantidadUsuarios <- cantidadUsuarios + 1 // se le suma 1 a la cantidad de usuarios
 		Escribir "Usuario registrado con exito"
 		return <- Verdadero
 	SiNo
@@ -107,16 +120,78 @@ Funcion return <- logIn(usuarios Por Referencia, cantidadUsuarios Por Referencia
 				Escribir "Se logueo correctamente"
 				return <- Verdadero
 			FinSi
-			i = i + 1
+			i <- i + 1
 		Fin Mientras
 		i <- 0
 		
 		Si return = Falso Entonces
 			Escribir "Usuario o contrasena incorrectos"
-			contadorIntentos = contadorIntentos + 1
+			contadorIntentos <- contadorIntentos + 1
 			Si contadorIntentos >= cantidadMaximaIntentos Entonces
 				Escribir "Ha superado la cantidad maxima de intentos permitidos, vuelva a intentarlo mas tarde"
 			FinSi
 		FinSi
 	Mientras Que return = Falso y contadorIntentos < cantidadMaximaIntentos
+FinFuncion
+
+// CARGA Y ALMACENAMIENTO EN ARRAY
+Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Referencia)
+	Definir nombreProducto, otroProducto, otroProductoMayuscula como cadena
+	Definir stockProducto Como Entero
+	Definir precioProducto como Real
+	Definir confirmaProducto como Logico 
+	confirmaProducto<-Verdadero
+	
+	Repetir 
+		Escribir "Ingrese el nombre del producto a cargar:"
+		Leer nombreProducto
+		
+		Escribir  "Ingrese el stock del producto:"
+		Leer stockProducto
+		
+		Escribir "Ingrese el precio del producto cargado:"
+		Repetir
+			Leer precioProducto
+			Si precioProducto<=0
+				Escribir "El valor ingresado debe ser mayor a 0"
+			FinSi
+		Hasta Que precioProducto>0
+		
+		productosCargados[idProducto,0]<-ConvertirATexto(idProducto)
+		productosCargados[idProducto,1]<-nombreProducto
+		productosCargados[idProducto,2]<-ConvertirATexto(stockProducto)
+		productosCargados[idProducto,3]<-ConvertirATexto(precioProducto)
+		
+		idProducto<- idProducto+1
+		
+		Repetir
+			Escribir "Desea agregar otro producto? SI/NO"
+			Leer otroProducto
+			otroProductoMayuscula<-Mayusculas(otroProducto)
+			Si otroProductoMayuscula="NO" Entonces
+				confirmaProducto<-Falso
+			Sino 
+				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
+					Escribir "Opción no válida, vuelva a intentarlo"
+				FinSi
+			FinSi
+		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
+	Hasta Que confirmaProducto=Falso
+FinSubProceso
+
+
+//FUNCION PARA MENU CON OPCIONES DE CARGA Y VER INVENTARIO
+Funcion return<-menuOpciones()
+	Definir return Como Entero
+	
+	Escribir "Ingrese una opción:"
+	Escribir "1- Agregar productos"
+	Escribir "2- Ver inventario"
+	Escribir "3- Salir"
+	Repetir	
+		Leer return
+		Si return <>1 y return<>2 y return<>3 Entonces
+			Escribir "Ingrese una opción correcta"
+		FinSi
+	Hasta Que return=1 o return=2 o return=3
 FinFuncion
