@@ -2,7 +2,7 @@ Algoritmo sistema_gestion
 	Definir usuarios Como Caracter
 	Dimension usuarios(100, 2) // array de usuarios registrados, maxima cantidad de usuarios: 100
 	Definir cantidadUsuarios como Entero
-	Definir opcionSeleccionada, opcionMenu Como Entero
+	Definir opcionSeleccionada Como Entero
 	Definir productosCargados como Cadena
 	Definir idProducto Como Entero
 	//DEFINO ARRAY PARA ALMACENAR LOS DATOS CARGADOS POR USUARIO LUEGO DEL LOGIN. FILAS: 100 (PRODUCTOS), COLUMNAS: 4 (1.ID 2.NOMBRE PRODUCTO 3.STOCK 4.PRECIO)
@@ -24,12 +24,12 @@ Algoritmo sistema_gestion
 				Si logIn(usuarios, cantidadUsuarios) Entonces
 					Escribir "Hola!"
 					Repetir
-						opcionMenu <- menuOpciones()
-						Segun opcionMenu Hacer
+						opcionSeleccionada <- menuOpciones()
+						Segun opcionSeleccionada Hacer
 							1:
 								cargaProductos(productosCargados,idProducto)
 							2:
-								//ver inventario y dem·s opciones de ordenamiento y b˙squedas
+								//ver inventario y dem√°s opciones de ordenamiento y b√∫squedas
 						Fin Segun
 					Hasta Que opcionSeleccionada=3
 				FinSi
@@ -172,7 +172,7 @@ Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Refere
 				confirmaProducto<-Falso
 			Sino 
 				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
-					Escribir "OpciÛn no v·lida, vuelva a intentarlo"
+					Escribir "Opci√≥n no v√°lida, vuelva a intentarlo"
 				FinSi
 			FinSi
 		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
@@ -184,14 +184,14 @@ FinSubProceso
 Funcion return<-menuOpciones()
 	Definir return Como Entero
 	
-	Escribir "Ingrese una opciÛn:"
+	Escribir "Ingrese una opci√≥n:"
 	Escribir "1- Agregar productos"
 	Escribir "2- Ver inventario"
 	Escribir "3- Salir"
 	Repetir	
 		Leer return
 		Si return <>1 y return<>2 y return<>3 Entonces
-			Escribir "Ingrese una opciÛn correcta"
+			Escribir "Ingrese una opci√≥n correcta"
 		FinSi
 	Hasta Que return=1 o return=2 o return=3
 FinFuncion
