@@ -276,4 +276,3 @@ Funcion return<- buscarProducto(array,n,columnaAbuscar,elementoABuscar)
 		return <- -1;
 	FinSi
 FinFuncion
-	
