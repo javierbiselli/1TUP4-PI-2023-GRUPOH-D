@@ -2,11 +2,11 @@ Algoritmo sistema_gestion
 	Definir usuarios Como Caracter
 	Dimension usuarios(100, 2) // array de usuarios registrados, maxima cantidad de usuarios: 100
 	Definir cantidadUsuarios como Entero
-	Definir opcionSeleccionada, opcionMenu Como Entero
+	Definir opcionSeleccionada Como Entero
 	Definir productosCargados como Cadena
 	Definir idProducto Como Entero
 	//DEFINO ARRAY PARA ALMACENAR LOS DATOS CARGADOS POR USUARIO LUEGO DEL LOGIN. FILAS: 100 (PRODUCTOS), COLUMNAS: 4 (1.ID 2.NOMBRE PRODUCTO 3.STOCK 4.PRECIO)
-	Dimension productosCargados[100,4]
+	Dimension productosCargados[100,4] 
 	idProducto<-0	
 	
 	// usuario de prueba
@@ -24,14 +24,18 @@ Algoritmo sistema_gestion
 				Si logIn(usuarios, cantidadUsuarios) Entonces
 					Escribir "Hola!"
 					Repetir
-						opcionMenu <- menuOpciones()
-						Segun opcionMenu Hacer
+						opcionSeleccionada <- menuOpciones()
+						Segun opcionSeleccionada Hacer
 							1:
 								cargaProductos(productosCargados,idProducto)
 							2:
-								//ver inventario y demás opciones de ordenamiento y búsquedas
+								//ver inventario --- tipos de vistas con ordenamiento
+							3:
+								// buscar producto y mostrar
+							4:	
+								editarProducto(productosCargados, 100)
 						Fin Segun
-					Hasta Que opcionSeleccionada=3
+					Hasta Que opcionSeleccionada=5
 				FinSi
 			2:
 				Si register(usuarios, cantidadUsuarios) Entonces
@@ -41,7 +45,7 @@ Algoritmo sistema_gestion
 				Escribir "Adios"
 		Fin Segun
 	Mientras Que opcionSeleccionada <> 3 y opcionSeleccionada <> 1 
-	// si es 3 sale y se termina el programa, si es 1 entra en el bucle para el logueo, y al salir, ya sea falso o verdadero el return del logueo, ya no se vuelve e ejecutar el welcomeMenu
+	// si es 5 sale y se termina el programa, si es 1 entra en el bucle para el logueo, y al salir, ya sea falso o verdadero el return del logueo, ya no se vuelve e ejecutar el welcomeMenu
 FinAlgoritmo
 
 
@@ -187,11 +191,89 @@ Funcion return<-menuOpciones()
 	Escribir "Ingrese una opción:"
 	Escribir "1- Agregar productos"
 	Escribir "2- Ver inventario"
-	Escribir "3- Salir"
+	Escribir "3- Buscar producto"
+	Escribir "4- Editar producto"
+	Escribir "5- Salir"
 	Repetir	
 		Leer return
-		Si return <>1 y return<>2 y return<>3 Entonces
+		Si return > 5 o return <1 Entonces
 			Escribir "Ingrese una opción correcta"
 		FinSi
-	Hasta Que return=1 o return=2 o return=3
+	Hasta Que return>0 y return<6
 FinFuncion
+
+
+
+//Subproceso editar producto (nombre, stock o precio)
+Subproceso editarProducto(productosCargados Por Referencia, filas)
+	Definir  nuevoNombre como Cadena
+	Definir numeroId, filaProductoEncontrado, opcionMenu, nuevoStock, nuevoPrecio Como Entero
+	
+	
+	Repetir
+		Escribir "Ingrese el código ID del producto que desea editar"
+		Leer numeroId
+		Si numeroId<0 Entonces
+			Escribir "El ID debe ser mayor o igual a 0"
+		FinSi
+	Mientras Que numeroId <0
+	
+	
+	filaProductoEncontrado<- buscarProducto(productosCargados,filas,0,ConvertirATexto(numeroID))
+	
+	Si filaProductoEncontrado = -1
+		Escribir "Producto no encontrado"
+	SiNo
+		Escribir "Ingrese una opción: 1-Editar nombre 2-Editar stock 3-Editar precio"
+		Repetir
+			Leer opcionMenu
+			Si opcionMenu<1 o opcionMenu>3 Entonces
+				Escribir "Opción no válida, intente nuevamente."
+			FinSi
+		Hasta Que opcionMenu>0 y opcionMenu<4
+		
+		Segun opcionMenu Hacer
+			1:
+				Escribir "Ingrese el nuevo nombre del producto"
+				Leer nuevoNombre
+				productosCargados[filaProductoEncontrado,1]<-nuevoNombre
+			2:
+				Escribir "Ingrese el nuevo stock del producto"
+				Leer nuevoStock
+				productosCargados[filaProductoEncontrado,2]<-ConvertirATexto(nuevoStock)
+			3:
+				Escribir "Ingrese el nuevo precio del producto"
+				Repetir
+					Leer nuevoPrecio	
+					Si nuevoPrecio<0 Entonces
+						Escribir "El precio debe ser mayor a 0, ingrese nuevamente:"
+					FinSi
+				Hasta Que nuevoPrecio>0
+				productosCargados[filaProductoEncontrado,3]<-ConvertirATexto(nuevoPrecio)
+		Fin Segun
+		
+	FinSi
+	
+	
+	
+FinSubProceso
+
+//Funcion para buscar  el índice donde se encuentra un producto en el array 
+Funcion return<- buscarProducto(array,n,columnaAbuscar,elementoABuscar)
+	Definir i Como Entero;
+	i<-0;
+	elementoEncontrado <- Falso;
+	Mientras i <= n-1 y no elementoEncontrado
+		si array[i,columnaAbuscar] == elementoABuscar Entonces
+			elementoEncontrado <- Verdadero;
+		SiNo
+			i <- i +1; 
+		FinSi
+	FinMientras
+	Si elementoEncontrado Entonces
+		return <- i;
+	SiNo
+		return <- -1;
+	FinSi
+FinFuncion
+	
