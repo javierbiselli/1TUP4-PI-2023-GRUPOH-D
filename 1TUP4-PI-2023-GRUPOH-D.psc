@@ -29,7 +29,8 @@ Algoritmo sistema_gestion
 							1:
 								cargaProductos(productosCargados,idProducto)
 							2:
-								//ver inventario y demÃ¡s opciones de ordenamiento y bÃºsquedas
+								verListado(productosCargados,idProducto)
+								
 						Fin Segun
 					Hasta Que opcionSeleccionada=3
 				FinSi
@@ -44,6 +45,97 @@ Algoritmo sistema_gestion
 	// si es 3 sale y se termina el programa, si es 1 entra en el bucle para el logueo, y al salir, ya sea falso o verdadero el return del logueo, ya no se vuelve e ejecutar el welcomeMenu
 FinAlgoritmo
 
+Subproceso verListado(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir opcionSeleccionada Como Entero
+	
+	Escribir "Seleccione una opción de ordenamiento:"
+	Escribir "1- Mostrar listado de mayor a menor precio"
+	Escribir "2- Mostrar listado de menor a mayor precio"
+	Escribir "3- Volver al menú principal"
+	
+	Repetir
+		Leer opcionSeleccionada
+		
+		Segun opcionSeleccionada Hacer
+			1:
+				
+				OrdenarPorPrecioDescendente(productosCargados, idProducto)
+				MostrarListado(productosCargados, idProducto)
+			2:
+				
+				OrdenarPorPrecioAscendente(productosCargados, idProducto)
+				MostrarListado(productosCargados, idProducto)
+			3:
+				Escribir "Volviendo al menú principal..."
+		Fin Segun
+		
+		Si opcionSeleccionada <> 1 y opcionSeleccionada <> 2 y opcionSeleccionada <> 3 Entonces
+			Escribir "Ingrese una opción correcta"
+		FinSi
+	Hasta Que opcionSeleccionada = 3
+FinSubProceso
+
+Subproceso OrdenarPorPrecioAscendente(productosCargados Por Referencia, idProducto Por Referencia)
+	Si idProducto <= 0 Entonces
+		Escribir "No hay productos cargados"
+	FinSi
+	
+	Definir i, j Como Entero
+	Definir temp Como Cadena
+	
+	Para i <- 0 Hasta idProducto - 2 Hacer
+		Para j <- 0 Hasta idProducto - i - 2 Hacer
+			Si productosCargados[j, 3]> productosCargados[j + 1, 3] Entonces
+				Para k <- 0 Hasta 3 Hacer
+					temp <- productosCargados[j, k]
+					productosCargados[j, k] <- productosCargados[j + 1, k]
+					productosCargados[j + 1, k] <- temp
+				FinPara
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+
+
+Subproceso OrdenarPorPrecioDescendente(productosCargados Por Referencia, idProducto Por Referencia)
+	Si idProducto <= 0 Entonces
+		Escribir "No hay productos cargados"
+	FinSi
+	
+	Definir i, j, temp Como Entero
+	Definir productoTemp Como Cadena
+	
+	Para i <- 0 Hasta idProducto - 2 Hacer
+		Para j <- 0 Hasta idProducto - i - 2 Hacer
+			Si productosCargados[j, 3] < productosCargados[j + 1, 3] Entonces
+				
+				Para temp <- 0 Hasta 3 Hacer
+					productoTemp <- productosCargados[j, temp]
+					productosCargados[j, temp] <- productosCargados[j + 1, temp]
+					productosCargados[j + 1, temp] <- productoTemp
+				FinPara
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+
+
+Subproceso MostrarListado(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir i Como Entero
+	
+	Escribir "Listado de productos:"
+	
+	Para i <- 0 Hasta idProducto - 1 Hacer
+		Escribir "ID: " + productosCargados[i, 0]
+		Escribir "Nombre: " + productosCargados[i, 1]
+		Escribir "Stock: " + productosCargados[i, 2]
+		Escribir "Precio: " + productosCargados[i, 3]
+		Escribir "---------------------"
+	FinPara
+	Escribir "Fin del listado"
+FinSubProceso
 
 // menu de inicio, devuelvo la opcion seleccionada
 Funcion return <- welcomeMenu()
@@ -172,7 +264,7 @@ Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Refere
 				confirmaProducto<-Falso
 			Sino 
 				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
-					Escribir "OpciÃ³n no vÃ¡lida, vuelva a intentarlo"
+					Escribir "Opción no válida, vuelva a intentarlo"
 				FinSi
 			FinSi
 		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
@@ -184,14 +276,14 @@ FinSubProceso
 Funcion return<-menuOpciones()
 	Definir return Como Entero
 	
-	Escribir "Ingrese una opciÃ³n:"
+	Escribir "Ingrese una opción:"
 	Escribir "1- Agregar productos"
 	Escribir "2- Ver inventario"
 	Escribir "3- Salir"
 	Repetir	
 		Leer return
 		Si return <>1 y return<>2 y return<>3 Entonces
-			Escribir "Ingrese una opciÃ³n correcta"
+			Escribir "Ingrese una opción correcta"
 		FinSi
 	Hasta Que return=1 o return=2 o return=3
 FinFuncion
