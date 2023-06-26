@@ -233,16 +233,19 @@ Subproceso editarProducto(productosCargados Por Referencia, filas)
 		Hasta Que opcionMenu>0 y opcionMenu<4
 		
 		Segun opcionMenu Hacer
-			1:
-				Escribir "Ingrese el nuevo nombre del producto"
+			1:	
+				Escribir "Nombre actual: " 	productosCargados[filaProductoEncontrado,1]	
+				Escribir "Ingrese el nuevo nombre del producto:"
 				Leer nuevoNombre
 				productosCargados[filaProductoEncontrado,1]<-nuevoNombre
-			2:
-				Escribir "Ingrese el nuevo stock del producto"
+			2:	
+				Escribir "Stock actual: " productosCargados[filaProductoEncontrado,2]
+				Escribir "Ingrese el nuevo stock del producto:"
 				Leer nuevoStock
 				productosCargados[filaProductoEncontrado,2]<-ConvertirATexto(nuevoStock)
-			3:
-				Escribir "Ingrese el nuevo precio del producto"
+			3:	
+				Escribir "Precio actual: " productosCargados[filaProductoEncontrado,3]
+				Escribir "Ingrese el nuevo precio del producto:"
 				Repetir
 					Leer nuevoPrecio	
 					Si nuevoPrecio<0 Entonces
@@ -260,7 +263,8 @@ FinSubProceso
 
 //Funcion para buscar  el índice donde se encuentra un producto en el array 
 Funcion return<- buscarProducto(array,n,columnaAbuscar,elementoABuscar)
-	Definir i Como Entero;
+	Definir i, return Como Entero;
+	Definir elementoEncontrado Como Logico
 	i<-0;
 	elementoEncontrado <- Falso;
 	Mientras i <= n-1 y no elementoEncontrado
