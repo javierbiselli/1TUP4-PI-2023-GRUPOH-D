@@ -4,9 +4,13 @@ Algoritmo sistema_gestion
 	Definir cantidadUsuarios como Entero
 	Definir opcionSeleccionada Como Entero
 	Definir productosCargados como Cadena
-	Definir idProducto Como Entero
+	Definir idProducto, filas, cantidadProductosCargados Como Entero
 	//DEFINO ARRAY PARA ALMACENAR LOS DATOS CARGADOS POR USUARIO LUEGO DEL LOGIN. FILAS: 100 (PRODUCTOS), COLUMNAS: 4 (1.ID 2.NOMBRE PRODUCTO 3.STOCK 4.PRECIO)
-	Dimension productosCargados[100,4] 
+	
+	filas <- 100
+	cantidadProductosCargados <- 0
+	
+	Dimension productosCargados[filas,4] 
 	idProducto<-0	
 	
 	// usuario de prueba
@@ -15,6 +19,7 @@ Algoritmo sistema_gestion
 	cantidadUsuarios <- 1 // esta variable se usa en la funcion logIn y register como index de las filas en el array de usuarios, se le suma 1 por cada nuevo usuario
 	
 	Escribir "Bienvenido al sistema de gestion"
+	Escribir ""
 	
 	Repetir
 		opcionSeleccionada <- welcomeMenu()
@@ -22,24 +27,27 @@ Algoritmo sistema_gestion
 		Segun opcionSeleccionada Hacer
 			1:
 				Si logIn(usuarios, cantidadUsuarios) Entonces
-					Escribir "Hola!"
 					Repetir
 						opcionSeleccionada <- menuOpciones()
 						Segun opcionSeleccionada Hacer
 							1:
-								cargaProductos(productosCargados,idProducto)
+								cargaProductos(productosCargados,idProducto, cantidadProductosCargados)
 							2:
 								//ver inventario --- tipos de vistas con ordenamiento
 							3:
-								// buscar producto y mostrar
+								buscarProductoNombre(productosCargados, filas, cantidadProductosCargados)
 							4:	
-								editarProducto(productosCargados, 100)
+								editarProducto(productosCargados, filas, cantidadProductosCargados)
+							5:
+								borrarProducto(productosCargados, filas, cantidadProductosCargados)
 						Fin Segun
-					Hasta Que opcionSeleccionada=5
+					Hasta Que opcionSeleccionada = 6
 				FinSi
 			2:
 				Si register(usuarios, cantidadUsuarios) Entonces
+					Escribir ""
 					Escribir "Ya puede loguearse"
+					Escribir ""
 				FinSi
 			3:
 				Escribir "Adios"
@@ -62,6 +70,7 @@ Funcion return <- welcomeMenu()
 		
 		Si return  < 1 o return > 3 Entonces
 			Escribir "Ingrese una opcion correcta"
+			Escribir ""
 		FinSi
 	Mientras Que return < 1 o return > 3
 FinFuncion
@@ -89,9 +98,11 @@ Funcion return <- register(usuarios Por Referencia, cantidadUsuarios Por Referen
 		usuarios(cantidadUsuarios, 1) <- pass
 		cantidadUsuarios <- cantidadUsuarios + 1 // se le suma 1 a la cantidad de usuarios
 		Escribir "Usuario registrado con exito"
+		Escribir ""
 		return <- Verdadero
 	SiNo
 		Escribir "Error en el registro"
+		Escribir ""
 		return <- Falso
 	FinSi
 FinFuncion
@@ -110,6 +121,7 @@ Funcion return <- logIn(usuarios Por Referencia, cantidadUsuarios Por Referencia
 	Definir i como entero
 	i <- 0
 	
+	Escribir ""
 	Escribir "Loguearse:"
 	
 	Repetir
@@ -138,8 +150,9 @@ Funcion return <- logIn(usuarios Por Referencia, cantidadUsuarios Por Referencia
 	Mientras Que return = Falso y contadorIntentos < cantidadMaximaIntentos
 FinFuncion
 
+
 // CARGA Y ALMACENAMIENTO EN ARRAY
-Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Referencia)
+Subproceso cargaProductos(productosCargados Por Referencia, idProducto Por Referencia, cantidadProductosCargados Por Referencia)
 	Definir nombreProducto, otroProducto, otroProductoMayuscula como cadena
 	Definir stockProducto Como Entero
 	Definir precioProducto como Real
@@ -153,7 +166,7 @@ Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Refere
 		Escribir  "Ingrese el stock del producto:"
 		Leer stockProducto
 		
-		Escribir "Ingrese el precio del producto cargado:"
+		Escribir "Ingrese el precio del producto:"
 		Repetir
 			Leer precioProducto
 			Si precioProducto<=0
@@ -166,7 +179,8 @@ Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Refere
 		productosCargados[idProducto,2]<-ConvertirATexto(stockProducto)
 		productosCargados[idProducto,3]<-ConvertirATexto(precioProducto)
 		
-		idProducto<- idProducto+1
+		idProducto <- idProducto + 1
+		cantidadProductosCargados <- cantidadProductosCargados + 1
 		
 		Repetir
 			Escribir "Desea agregar otro producto? SI/NO"
@@ -176,7 +190,7 @@ Subproceso cargaProductos(productosCargados Por Referencia,idProducto Por Refere
 				confirmaProducto<-Falso
 			Sino 
 				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
-					Escribir "Opci髇 no v醠ida, vuelva a intentarlo"
+					Escribir "Opci贸n no v谩lida, vuelva a intentarlo"
 				FinSi
 			FinSi
 		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
@@ -188,81 +202,94 @@ FinSubProceso
 Funcion return<-menuOpciones()
 	Definir return Como Entero
 	
-	Escribir "Ingrese una opci髇:"
+	Escribir ""
+	Escribir "Ingrese una opci贸n:"
 	Escribir "1- Agregar productos"
 	Escribir "2- Ver inventario"
 	Escribir "3- Buscar producto"
 	Escribir "4- Editar producto"
-	Escribir "5- Salir"
+	Escribir "5- Borrar producto"
+	Escribir "6- Cerrar sesion"
+	
 	Repetir	
 		Leer return
-		Si return > 5 o return <1 Entonces
-			Escribir "Ingrese una opci髇 correcta"
+		Si return < 1 o return > 6 Entonces
+			Escribir "Ingrese una opci贸n correcta"
+			Escribir ""
 		FinSi
-	Hasta Que return>0 y return<6
+	Mientras que return < 1 o return > 6
 FinFuncion
 
 
-
 //Subproceso editar producto (nombre, stock o precio)
-Subproceso editarProducto(productosCargados Por Referencia, filas)
-	Definir  nuevoNombre como Cadena
-	Definir numeroId, filaProductoEncontrado, opcionMenu, nuevoStock, nuevoPrecio Como Entero
-	
-	
-	Repetir
-		Escribir "Ingrese el c骴igo ID del producto que desea editar"
-		Leer numeroId
-		Si numeroId<0 Entonces
-			Escribir "El ID debe ser mayor o igual a 0"
-		FinSi
-	Mientras Que numeroId <0
-	
-	
-	filaProductoEncontrado<- buscarProducto(productosCargados,filas,0,ConvertirATexto(numeroID))
-	
-	Si filaProductoEncontrado = -1
-		Escribir "Producto no encontrado"
+Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
+	Si cantidadProductosCargados == 0 Entonces
+		Escribir "No hay productos cargados en el sistema"
 	SiNo
-		Escribir "Ingrese una opci髇: 1-Editar nombre 2-Editar stock 3-Editar precio"
-		Repetir
-			Leer opcionMenu
-			Si opcionMenu<1 o opcionMenu>3 Entonces
-				Escribir "Opci髇 no v醠ida, intente nuevamente."
-			FinSi
-		Hasta Que opcionMenu>0 y opcionMenu<4
+		Definir  nuevoNombre como Cadena
+		Definir numeroId, filaProductoEncontrado, opcionMenu, nuevoStock, nuevoPrecio Como Entero
 		
-		Segun opcionMenu Hacer
-			1:	
-				Escribir "Nombre actual: " 	productosCargados[filaProductoEncontrado,1]	
-				Escribir "Ingrese el nuevo nombre del producto:"
-				Leer nuevoNombre
-				productosCargados[filaProductoEncontrado,1]<-nuevoNombre
-			2:	
-				Escribir "Stock actual: " productosCargados[filaProductoEncontrado,2]
-				Escribir "Ingrese el nuevo stock del producto:"
-				Leer nuevoStock
-				productosCargados[filaProductoEncontrado,2]<-ConvertirATexto(nuevoStock)
-			3:	
-				Escribir "Precio actual: " productosCargados[filaProductoEncontrado,3]
-				Escribir "Ingrese el nuevo precio del producto:"
-				Repetir
-					Leer nuevoPrecio	
-					Si nuevoPrecio<0 Entonces
-						Escribir "El precio debe ser mayor a 0, ingrese nuevamente:"
-					FinSi
-				Hasta Que nuevoPrecio>0
-				productosCargados[filaProductoEncontrado,3]<-ConvertirATexto(nuevoPrecio)
-		Fin Segun
+		Repetir
+			Escribir "Ingrese el c贸digo ID del producto que desea editar"
+			Leer numeroId
+			Si numeroId<0 Entonces
+				Escribir "El ID debe ser mayor o igual a 0"
+				Escribir ""
+			FinSi
+		Mientras Que numeroId <0
+		
+		filaProductoEncontrado<- buscarIndiceProducto(productosCargados,filas,0,ConvertirATexto(numeroID))
+		
+		Si filaProductoEncontrado = -1
+			Escribir "Producto no encontrado"
+			Escribir ""
+		SiNo
+			Escribir ""
+			Escribir "Nombre: " productosCargados[filaProductoEncontrado, 1]
+			Escribir "Stock: " productosCargados[filaProductoEncontrado, 2]
+			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
+			Escribir ""
+			Escribir "Ingrese una opci贸n: 1-Editar nombre 2-Editar stock 3-Editar precio 4-Volver atras"
+			
+			Repetir
+				Leer opcionMenu
+				Si opcionMenu<1 o opcionMenu>4 Entonces
+					Escribir "Opci贸n no v谩lida, intente nuevamente."
+				FinSi
+			Hasta Que opcionMenu>0 y opcionMenu<5
+			
+			Segun opcionMenu Hacer
+				1:	
+					Escribir "Nombre actual: " 	productosCargados[filaProductoEncontrado,1]	
+					Escribir "Ingrese el nuevo nombre del producto:"
+					Leer nuevoNombre
+					productosCargados[filaProductoEncontrado,1]<-nuevoNombre
+				2:	
+					Escribir "Stock actual: " productosCargados[filaProductoEncontrado,2]
+					Escribir "Ingrese el nuevo stock del producto:"
+					Leer nuevoStock
+					productosCargados[filaProductoEncontrado,2]<-ConvertirATexto(nuevoStock)
+				3:	
+					Escribir "Precio actual: " productosCargados[filaProductoEncontrado,3]
+					Escribir "Ingrese el nuevo precio del producto:"
+					Repetir
+						Leer nuevoPrecio	
+						Si nuevoPrecio<0 Entonces
+							Escribir "El precio debe ser mayor a 0, ingrese nuevamente:"
+						FinSi
+					Hasta Que nuevoPrecio>0
+					productosCargados[filaProductoEncontrado,3]<-ConvertirATexto(nuevoPrecio)
+				4: 
+					Escribir "Volviendo..."
+			Fin Segun
+		FinSi
 		
 	FinSi
-	
-	
-	
 FinSubProceso
 
-//Funcion para buscar  el 韓dice donde se encuentra un producto en el array 
-Funcion return<- buscarProducto(array,n,columnaAbuscar,elementoABuscar)
+
+// Funcion para buscar el 铆ndice donde se encuentra un producto en el array 
+Funcion return <- buscarIndiceProducto(array, n, columnaAbuscar, elementoABuscar)
 	Definir i, return Como Entero;
 	Definir elementoEncontrado Como Logico
 	i<-0;
@@ -280,3 +307,103 @@ Funcion return<- buscarProducto(array,n,columnaAbuscar,elementoABuscar)
 		return <- -1;
 	FinSi
 FinFuncion
+
+
+// busca un producto por nombre y da opciones de editar y borrar
+SubProceso buscarProductoNombre(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
+	Si cantidadProductosCargados == 0 Entonces
+		Escribir "No hay productos cargados en el sistema"
+	SiNo
+		Definir nombre Como Caracter
+		Definir opcionMenu Como Entero
+		
+		Escribir "Ingrese el nombre del producto que desea buscar"
+		Leer nombre
+		
+		filaProductoEncontrado <- buscarIndiceProducto(productosCargados, filas, 1, nombre)
+		
+		Si filaProductoEncontrado = -1
+			Escribir "Producto no encontrado"
+		SiNo
+			Escribir ""
+			Escribir "ID: " productosCargados[filaProductoEncontrado, 0]
+			Escribir "Nombre: " productosCargados[filaProductoEncontrado, 1]
+			Escribir "Stock: " productosCargados[filaProductoEncontrado, 2]
+			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
+			
+			Escribir ""
+			Escribir "Ingrese una opci贸n: 1-Editar producto 2-Borrar producto 3-Volver atras"
+			
+			Repetir
+				Leer opcionMenu
+				Si opcionMenu<1 o opcionMenu>3 Entonces
+					Escribir "Opci贸n no v谩lida, intente nuevamente."
+				FinSi
+			Hasta Que opcionMenu>0 y opcionMenu<4
+			
+			Segun opcionMenu Hacer
+				1:	
+					editarProducto(productosCargados, filas, cantidadProductosCargados)
+				2:	
+					borrarProducto(productosCargados, filas, cantidadProductosCargados)
+				3:	
+					Escribir "Volviendo..."
+			Fin Segun
+		FinSi
+		
+	FinSi
+FinSubProceso
+
+Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
+	Si cantidadProductosCargados == 0 Entonces
+		Escribir "No hay productos cargados en el sistema"
+	SiNo
+		Definir numeroID, confirmacion Como Entero
+		
+		Repetir
+			Escribir "Ingrese el c贸digo ID del producto que desea borrar"
+			Leer numeroID
+			Si numeroId < 0 Entonces
+				Escribir "El ID debe ser mayor o igual a 0"
+				Escribir ""
+			FinSi
+		Mientras Que numeroId < 0
+		
+		filaProductoEncontrado <- buscarIndiceProducto(productosCargados,filas,0,ConvertirATexto(numeroID))
+		
+		Si filaProductoEncontrado = -1
+			Escribir "Producto no encontrado"
+		SiNo
+			Escribir ""
+			Escribir "Nombre: " productosCargados[filaProductoEncontrado, 1]
+			Escribir "Stock: " productosCargados[filaProductoEncontrado, 2]
+			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
+			Escribir ""
+			
+			Repetir
+				Escribir "Ingrese 1 si esta seguro de que desea borrar " productosCargados[filaProductoEncontrado, 1]
+				Escribir "Ingrese 0 para cancelar la operacion"
+				Leer confirmacion
+				Si confirmacion <> 0 y confirmacion <> 1 Entonces
+					Escribir "Opci贸n no v谩lida, intente nuevamente."
+				FinSi
+			Mientras que confirmacion <> 0 y confirmacion <> 1
+			
+			Definir i, j Como Entero
+			Si confirmacion == 1 Entonces
+				Para i <- filaProductoEncontrado Hasta filas-2 Hacer
+					Para j <- 0 Hasta 3 Hacer
+						productosCargados[i, j] <- productosCargados[i+1, j] // sube una fila al elemento hasta llegar a la ultima
+					FinPara
+				FinPara
+				filas <- filas - 1 // elimina la ultima fila
+				Escribir "Producto eliminado con exito"
+				cantidadProductosCargados <- cantidadProductosCargados - 1
+				filas <- filas + 1 // vuelvo a sumar 1 a las filas para no perder el espacio (hay que ver si esto funciona bien cuando hagamos lo de ver inventario)
+			SiNo
+				Escribir "Operacion cancelada"
+			FinSi
+		FinSi
+		
+	FinSi
+FinSubProceso
