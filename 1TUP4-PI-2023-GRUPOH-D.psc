@@ -398,6 +398,7 @@ Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia
 				FinPara
 				filas <- filas - 1 // elimina la ultima fila
 				Escribir "Producto eliminado con exito"
+				cantidadProductosCargados <- cantidadProductosCargados - 1
 				filas <- filas + 1 // vuelvo a sumar 1 a las filas para no perder el espacio (hay que ver si esto funciona bien cuando hagamos lo de ver inventario)
 			SiNo
 				Escribir "Operacion cancelada"
