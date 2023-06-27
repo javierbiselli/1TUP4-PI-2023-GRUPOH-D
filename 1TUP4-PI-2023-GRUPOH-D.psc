@@ -190,7 +190,7 @@ Subproceso cargaProductos(productosCargados Por Referencia, idProducto Por Refer
 				confirmaProducto<-Falso
 			Sino 
 				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
-					Escribir "Opci髇 no v醠ida, vuelva a intentarlo"
+					Escribir "Opci贸n no v谩lida, vuelva a intentarlo"
 				FinSi
 			FinSi
 		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
@@ -203,7 +203,7 @@ Funcion return<-menuOpciones()
 	Definir return Como Entero
 	
 	Escribir ""
-	Escribir "Ingrese una opci髇:"
+	Escribir "Ingrese una opci贸n:"
 	Escribir "1- Agregar productos"
 	Escribir "2- Ver inventario"
 	Escribir "3- Buscar producto"
@@ -214,7 +214,7 @@ Funcion return<-menuOpciones()
 	Repetir	
 		Leer return
 		Si return < 1 o return > 6 Entonces
-			Escribir "Ingrese una opci髇 correcta"
+			Escribir "Ingrese una opci贸n correcta"
 			Escribir ""
 		FinSi
 	Mientras que return < 1 o return > 6
@@ -230,7 +230,7 @@ Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia
 		Definir numeroId, filaProductoEncontrado, opcionMenu, nuevoStock, nuevoPrecio Como Entero
 		
 		Repetir
-			Escribir "Ingrese el c骴igo ID del producto que desea editar"
+			Escribir "Ingrese el c贸digo ID del producto que desea editar"
 			Leer numeroId
 			Si numeroId<0 Entonces
 				Escribir "El ID debe ser mayor o igual a 0"
@@ -249,12 +249,12 @@ Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia
 			Escribir "Stock: " productosCargados[filaProductoEncontrado, 2]
 			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
 			Escribir ""
-			Escribir "Ingrese una opci髇: 1-Editar nombre 2-Editar stock 3-Editar precio 4-Volver atras"
+			Escribir "Ingrese una opci贸n: 1-Editar nombre 2-Editar stock 3-Editar precio 4-Volver atras"
 			
 			Repetir
 				Leer opcionMenu
 				Si opcionMenu<1 o opcionMenu>4 Entonces
-					Escribir "Opci髇 no v醠ida, intente nuevamente."
+					Escribir "Opci贸n no v谩lida, intente nuevamente."
 				FinSi
 			Hasta Que opcionMenu>0 y opcionMenu<5
 			
@@ -288,7 +288,7 @@ Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia
 FinSubProceso
 
 
-// Funcion para buscar el 韓dice donde se encuentra un producto en el array 
+// Funcion para buscar el 铆ndice donde se encuentra un producto en el array 
 Funcion return <- buscarIndiceProducto(array, n, columnaAbuscar, elementoABuscar)
 	Definir i, return Como Entero;
 	Definir elementoEncontrado Como Logico
@@ -332,12 +332,12 @@ SubProceso buscarProductoNombre(productosCargados Por Referencia, filas Por Refe
 			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
 			
 			Escribir ""
-			Escribir "Ingrese una opci髇: 1-Editar producto 2-Borrar producto 3-Volver atras"
+			Escribir "Ingrese una opci贸n: 1-Editar producto 2-Borrar producto 3-Volver atras"
 			
 			Repetir
 				Leer opcionMenu
 				Si opcionMenu<1 o opcionMenu>3 Entonces
-					Escribir "Opci髇 no v醠ida, intente nuevamente."
+					Escribir "Opci贸n no v谩lida, intente nuevamente."
 				FinSi
 			Hasta Que opcionMenu>0 y opcionMenu<4
 			
@@ -361,7 +361,7 @@ Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia
 		Definir numeroID, confirmacion Como Entero
 		
 		Repetir
-			Escribir "Ingrese el c骴igo ID del producto que desea borrar"
+			Escribir "Ingrese el c贸digo ID del producto que desea borrar"
 			Leer numeroID
 			Si numeroId < 0 Entonces
 				Escribir "El ID debe ser mayor o igual a 0"
@@ -385,7 +385,7 @@ Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia
 				Escribir "Ingrese 0 para cancelar la operacion"
 				Leer confirmacion
 				Si confirmacion <> 0 y confirmacion <> 1 Entonces
-					Escribir "Opci髇 no v醠ida, intente nuevamente."
+					Escribir "Opci贸n no v谩lida, intente nuevamente."
 				FinSi
 			Mientras que confirmacion <> 0 y confirmacion <> 1
 			
