@@ -33,7 +33,7 @@ Algoritmo sistema_gestion
 							1:
 								cargaProductos(productosCargados,idProducto, cantidadProductosCargados)
 							2:
-								//ver inventario --- tipos de vistas con ordenamiento
+								verListado(productosCargados,idProducto)
 							3:
 								buscarProductoNombre(productosCargados, filas, cantidadProductosCargados)
 							4:	
@@ -219,7 +219,138 @@ Funcion return<-menuOpciones()
 		FinSi
 	Mientras que return < 1 o return > 6
 FinFuncion
+// lista de productos ordenados, depediendo de lo que el operador quien verlo
+Subproceso verListado(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir opcionSeleccionada Como Entero	
+	Repetir
+		Escribir "Seleccione una opción de ordenamiento:"
+		Escribir "1- Listados ordenados descendetemente "
+		Escribir "2- Listados ordenados ascendentemente "
+		Escribir "3- Volver al menú principal"
+		
+		Leer opcionSeleccionada
+		
+		Segun opcionSeleccionada Hacer
+			1:
+				
+				OrdenarDescendente(productosCargados, idProducto)
+				MostrarListado(productosCargados, idProducto)
+			2:
+				
+				OrdenarAscendente(productosCargados, idProducto)
+				MostrarListado(productosCargados, idProducto)
+			3:
+				Escribir "Volviendo al menú principal..."
+		Fin Segun
+		
+		Si opcionSeleccionada <> 1 y opcionSeleccionada <> 2 y opcionSeleccionada <> 3  Entonces
+			Escribir "Ingrese una opción correcta"
+		FinSi
+	Hasta Que opcionSeleccionada = 3
+FinSubProceso
+// Subproceso modificado para poder mostrar la lista de productos segun lo que el operado quiera ver ordenados descendentemente lista de prodectos, alfabeticamente de z-a, stock o precios.
+Subproceso OrdenarDescendente(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir eleccion, ordenarpor Como Entero
+	Si idProducto <= 0 Entonces
+		Escribir "No hay productos cargados"
+	SiNo
+		Repetir
+			Escribir " Eliga una las siguientes opciones: "
+			Escribir " -1 ver lista de productos "
+			Escribir " -2 ordenar alfabeticamente z-a "
+			Escribir " -3 ordenar por stock "
+			Escribir " -4 ordenar por precios "
+			Leer eleccion
+		Mientras Que eleccion < 1 o eleccion > 4
+	FinSi
+	
+	Segun eleccion Hacer
+		1:
+			ordenarpor<-0
+		2:
+			ordenarpor<-1
+		3:
+			ordenarpor<-2
+		4:	
+			ordenarpor<-3
+	Fin Segun
+	
+	Definir i, j, temp Como Entero
+	Definir productoTemp Como Cadena
+	
+	Para i <- 0 Hasta idProducto - 2 Hacer
+		Para j <- 0 Hasta idProducto - i - 2 Hacer
+			Si Minusculas(productosCargados[j, ordenarpor]) < Minusculas(productosCargados[j + 1, ordenarpor]) Entonces
+				
+				Para temp <- 0 Hasta 3 Hacer
+					productoTemp <- productosCargados[j, temp]
+					productosCargados[j, temp] <- productosCargados[j + 1, temp]
+					productosCargados[j + 1, temp] <- productoTemp
+				FinPara
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
 
+// Subproceso modificado para poder mostrar la lista de productos segun lo que el operado quiera ver ordenados ascendentemente lista de productos,  alfabeticamente de a-z stock o precios.
+Subproceso OrdenarAscendente(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir eleccion, ordernarpor Como Entero
+	Si idProducto <= 0 Entonces
+		Escribir "No hay productos cargados"
+	SiNo
+		Repetir
+			Escribir " Eliga una las siguientes opciones: "
+			Escribir " -1 ver lista de productos "
+			Escribir " -2 ordenar alfabeticamente a-z "
+			Escribir " -3 ordenar por stock "
+			Escribir " -4 ordenar por precios "
+			Leer eleccion
+		Mientras Que eleccion < 1 o eleccion > 4
+	FinSi
+	
+	Segun eleccion Hacer
+		1:
+			ordenarpor<-0
+		2:
+			ordenarpor<-1
+		3:
+			ordenarpor<-2
+		4:
+			ordenarpor<-3
+	Fin Segun
+	
+	Definir i, j, k Como Entero
+	Definir temp Como Cadena
+	
+	// pasamos los arreglos a minuscala para resolver el problema de las prioridades de mayusca y minuscala
+	Para i <- 0 Hasta idProducto - 2 Hacer
+		Para j <- 0 Hasta idProducto - i - 2 Hacer
+			Si  Minusculas(productosCargados[j, ordenarpor]) > Minusculas(productosCargados[j + 1, ordenarpor]) Entonces
+				Para k <- 0 Hasta 3 Hacer
+					temp <- productosCargados[j, k]
+					productosCargados[j, k] <- productosCargados[j + 1, k]
+					productosCargados[j + 1, k] <- temp
+				FinPara
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+// Subproceso que muestra la lista de productos
+Subproceso MostrarListado(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir i Como Entero
+	
+	Escribir "Listado de productos:"
+	
+	Para i <- 0 Hasta idProducto - 1 Hacer
+		Escribir "ID: "  ,  productosCargados[i, 0]
+		Escribir "Nombre: " , productosCargados[i, 1]
+		Escribir "Stock: " , productosCargados[i, 2]
+		Escribir "Precio: " , productosCargados[i, 3]
+		Escribir "---------------------"
+	FinPara
+	Escribir "Fin del listado"
+FinSubProceso
 
 //Subproceso editar producto (nombre, stock o precio)
 Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
