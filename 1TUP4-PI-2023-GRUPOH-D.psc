@@ -294,7 +294,7 @@ FinSubProceso
 
 // Subproceso modificado para poder mostrar la lista de productos segun lo que el operado quiera ver ordenados ascendentemente lista de productos,  alfabeticamente de a-z stock o precios.
 Subproceso OrdenarAscendente(productosCargados Por Referencia, idProducto Por Referencia)
-	Definir eleccion, ordernarpor Como Entero
+	Definir eleccion, ordenarpor Como Entero
 	Si idProducto <= 0 Entonces
 		Escribir "No hay productos cargados"
 	SiNo
@@ -442,6 +442,7 @@ FinFuncion
 
 // busca un producto por nombre y da opciones de editar y borrar
 SubProceso buscarProductoNombre(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
+	Definir filaProductoEncontrado Como Entero
 	Si cantidadProductosCargados == 0 Entonces
 		Escribir "No hay productos cargados en el sistema"
 	SiNo
@@ -486,6 +487,7 @@ SubProceso buscarProductoNombre(productosCargados Por Referencia, filas Por Refe
 FinSubProceso
 
 Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
+	Definir filaProductoEncontrado Como Entero
 	Si cantidadProductosCargados == 0 Entonces
 		Escribir "No hay productos cargados en el sistema"
 	SiNo
