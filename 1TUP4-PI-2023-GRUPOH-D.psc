@@ -1,4 +1,4 @@
-Algoritmo sistema_gestion
+Algoritmo sistema_gestion_rama
 	Definir usuarios Como Caracter
 	Dimension usuarios(100, 2) // array de usuarios registrados, maxima cantidad de usuarios: 100
 	Definir cantidadUsuarios como Entero
@@ -33,7 +33,7 @@ Algoritmo sistema_gestion
 							1:
 								cargaProductos(productosCargados,idProducto, cantidadProductosCargados)
 							2:
-								//ver inventario --- tipos de vistas con ordenamiento
+								verListado(productosCargados,idProducto)
 							3:
 								buscarProductoNombre(productosCargados, filas, cantidadProductosCargados)
 							4:	
@@ -190,7 +190,7 @@ Subproceso cargaProductos(productosCargados Por Referencia, idProducto Por Refer
 				confirmaProducto<-Falso
 			Sino 
 				Si otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO" Entonces
-					Escribir "OpciÃ³n no vÃ¡lida, vuelva a intentarlo"
+					Escribir "Opción no válida, vuelva a intentarlo"
 				FinSi
 			FinSi
 		Mientras Que  otroProductoMayuscula<>"SI" y otroProductoMayuscula<>"NO"
@@ -203,7 +203,7 @@ Funcion return<-menuOpciones()
 	Definir return Como Entero
 	
 	Escribir ""
-	Escribir "Ingrese una opciÃ³n:"
+	Escribir "Ingrese una opción:"
 	Escribir "1- Agregar productos"
 	Escribir "2- Ver inventario"
 	Escribir "3- Buscar producto"
@@ -214,12 +214,143 @@ Funcion return<-menuOpciones()
 	Repetir	
 		Leer return
 		Si return < 1 o return > 6 Entonces
-			Escribir "Ingrese una opciÃ³n correcta"
+			Escribir "Ingrese una opción correcta"
 			Escribir ""
 		FinSi
 	Mientras que return < 1 o return > 6
 FinFuncion
+// lista de productos ordenados, depediendo de lo que el operador quien verlo
+Subproceso verListado(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir opcionSeleccionada Como Entero	
+	Repetir
+		Escribir "Seleccione una opción de ordenamiento:"
+		Escribir "1- Listados ordenados descendetemente "
+		Escribir "2- Listados ordenados ascendentemente "
+		Escribir "3- Volver al menú principal"
+		
+		Leer opcionSeleccionada
+		
+		Segun opcionSeleccionada Hacer
+			1:
+				
+				OrdenarDescendente(productosCargados, idProducto)
+				MostrarListado(productosCargados, idProducto)
+			2:
+				
+				OrdenarAscendente(productosCargados, idProducto)
+				MostrarListado(productosCargados, idProducto)
+			3:
+				Escribir "Volviendo al menú principal..."
+		Fin Segun
+		
+		Si opcionSeleccionada <> 1 y opcionSeleccionada <> 2 y opcionSeleccionada <> 3  Entonces
+			Escribir "Ingrese una opción correcta"
+		FinSi
+	Hasta Que opcionSeleccionada = 3
+FinSubProceso
+// Subproceso modificado para poder mostrar la lista de productos segun lo que el operado quiera ver ordenados descendentemente lista de prodectos, alfabeticamente de z-a, stock o precios.
+Subproceso OrdenarDescendente(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir eleccion, ordenarpor Como Entero
+	Si idProducto <= 0 Entonces
+		Escribir "No hay productos cargados"
+	SiNo
+		Repetir
+			Escribir " Eliga una las siguientes opciones: "
+			Escribir " -1 ver lista de productos "
+			Escribir " -2 ordenar alfabeticamente z-a "
+			Escribir " -3 ordenar por stock "
+			Escribir " -4 ordenar por precios "
+			Leer eleccion
+		Mientras Que eleccion < 1 o eleccion > 4
+	FinSi
+	
+	Segun eleccion Hacer
+		1:
+			ordenarpor<-0
+		2:
+			ordenarpor<-1
+		3:
+			ordenarpor<-2
+		4:	
+			ordenarpor<-3
+	Fin Segun
+	
+	Definir i, j, temp Como Entero
+	Definir productoTemp Como Cadena
+	
+	Para i <- 0 Hasta idProducto - 2 Hacer
+		Para j <- 0 Hasta idProducto - i - 2 Hacer
+			Si Minusculas(productosCargados[j, ordenarpor]) < Minusculas(productosCargados[j + 1, ordenarpor]) Entonces
+				
+				Para temp <- 0 Hasta 3 Hacer
+					productoTemp <- productosCargados[j, temp]
+					productosCargados[j, temp] <- productosCargados[j + 1, temp]
+					productosCargados[j + 1, temp] <- productoTemp
+				FinPara
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
 
+// Subproceso modificado para poder mostrar la lista de productos segun lo que el operado quiera ver ordenados ascendentemente lista de productos,  alfabeticamente de a-z stock o precios.
+Subproceso OrdenarAscendente(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir eleccion, ordernarpor Como Entero
+	Si idProducto <= 0 Entonces
+		Escribir "No hay productos cargados"
+	SiNo
+		Repetir
+			Escribir " Eliga una las siguientes opciones: "
+			Escribir " -1 ver lista de productos "
+			Escribir " -2 ordenar alfabeticamente a-z "
+			Escribir " -3 ordenar por stock "
+			Escribir " -4 ordenar por precios "
+			Leer eleccion
+		Mientras Que eleccion < 1 o eleccion > 4
+	FinSi
+	
+	Segun eleccion Hacer
+		1:
+			ordenarpor<-0
+		2:
+			ordenarpor<-1
+		3:
+			ordenarpor<-2
+		4:
+			ordenarpor<-3
+	Fin Segun
+	
+	Definir i, j, k Como Entero
+	Definir temp Como Cadena
+	
+	// pasamos los arreglos a minuscala para resolver el problema de las prioridades de mayusca y minuscala
+	Para i <- 0 Hasta idProducto - 2 Hacer
+		Para j <- 0 Hasta idProducto - i - 2 Hacer
+			Si  Minusculas(productosCargados[j, ordenarpor]) > Minusculas(productosCargados[j + 1, ordenarpor]) Entonces
+				Para k <- 0 Hasta 3 Hacer
+					temp <- productosCargados[j, k]
+					productosCargados[j, k] <- productosCargados[j + 1, k]
+					productosCargados[j + 1, k] <- temp
+				FinPara
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+// Subproceso que muestra la lista de productos
+Subproceso MostrarListado(productosCargados Por Referencia, idProducto Por Referencia)
+	Definir i Como Entero
+	
+	Escribir "Listado de productos:"
+	
+	Para i <- 0 Hasta idProducto - 1 Hacer
+		Escribir "ID: "  ,  productosCargados[i, 0]
+		Escribir "Nombre: " , productosCargados[i, 1]
+		Escribir "Stock: " , productosCargados[i, 2]
+		Escribir "Precio: " , productosCargados[i, 3]
+		Escribir "---------------------"
+	FinPara
+	Escribir "Fin del listado"
+FinSubProceso
 
 //Subproceso editar producto (nombre, stock o precio)
 Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia, cantidadProductosCargados Por Referencia)
@@ -230,7 +361,7 @@ Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia
 		Definir numeroId, filaProductoEncontrado, opcionMenu, nuevoStock, nuevoPrecio Como Entero
 		
 		Repetir
-			Escribir "Ingrese el cÃ³digo ID del producto que desea editar"
+			Escribir "Ingrese el código ID del producto que desea editar"
 			Leer numeroId
 			Si numeroId<0 Entonces
 				Escribir "El ID debe ser mayor o igual a 0"
@@ -249,12 +380,12 @@ Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia
 			Escribir "Stock: " productosCargados[filaProductoEncontrado, 2]
 			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
 			Escribir ""
-			Escribir "Ingrese una opciÃ³n: 1-Editar nombre 2-Editar stock 3-Editar precio 4-Volver atras"
+			Escribir "Ingrese una opción: 1-Editar nombre 2-Editar stock 3-Editar precio 4-Volver atras"
 			
 			Repetir
 				Leer opcionMenu
 				Si opcionMenu<1 o opcionMenu>4 Entonces
-					Escribir "OpciÃ³n no vÃ¡lida, intente nuevamente."
+					Escribir "Opción no válida, intente nuevamente."
 				FinSi
 			Hasta Que opcionMenu>0 y opcionMenu<5
 			
@@ -288,7 +419,7 @@ Subproceso editarProducto(productosCargados Por Referencia, filas Por Referencia
 FinSubProceso
 
 
-// Funcion para buscar el Ã­ndice donde se encuentra un producto en el array 
+// Funcion para buscar el índice donde se encuentra un producto en el array 
 Funcion return <- buscarIndiceProducto(array, n, columnaAbuscar, elementoABuscar)
 	Definir i, return Como Entero;
 	Definir elementoEncontrado Como Logico
@@ -332,12 +463,12 @@ SubProceso buscarProductoNombre(productosCargados Por Referencia, filas Por Refe
 			Escribir "Precio: " productosCargados[filaProductoEncontrado, 3]
 			
 			Escribir ""
-			Escribir "Ingrese una opciÃ³n: 1-Editar producto 2-Borrar producto 3-Volver atras"
+			Escribir "Ingrese una opción: 1-Editar producto 2-Borrar producto 3-Volver atras"
 			
 			Repetir
 				Leer opcionMenu
 				Si opcionMenu<1 o opcionMenu>3 Entonces
-					Escribir "OpciÃ³n no vÃ¡lida, intente nuevamente."
+					Escribir "Opción no válida, intente nuevamente."
 				FinSi
 			Hasta Que opcionMenu>0 y opcionMenu<4
 			
@@ -361,7 +492,7 @@ Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia
 		Definir numeroID, confirmacion Como Entero
 		
 		Repetir
-			Escribir "Ingrese el cÃ³digo ID del producto que desea borrar"
+			Escribir "Ingrese el código ID del producto que desea borrar"
 			Leer numeroID
 			Si numeroId < 0 Entonces
 				Escribir "El ID debe ser mayor o igual a 0"
@@ -385,7 +516,7 @@ Subproceso borrarProducto(productosCargados Por Referencia, filas Por Referencia
 				Escribir "Ingrese 0 para cancelar la operacion"
 				Leer confirmacion
 				Si confirmacion <> 0 y confirmacion <> 1 Entonces
-					Escribir "OpciÃ³n no vÃ¡lida, intente nuevamente."
+					Escribir "Opción no válida, intente nuevamente."
 				FinSi
 			Mientras que confirmacion <> 0 y confirmacion <> 1
 			
